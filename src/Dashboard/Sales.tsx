@@ -79,12 +79,11 @@ const Sales = () => {
         />
         <Tooltip
           cursor={{ fill: "#FFFFFF" }}
-          content={({ active, payload, label }) => {
+          content={({ active, payload }) => {
             if (active && payload?.length) {
-              const dataItem = data.find((item, i) => i === label);
               return (
-                <div className="custom-tooltip w-32 bg-white px-2">
-                  <p>{`${dataItem?.name}: ${payload[0]?.value as string}`}</p>
+                <div className="custom-tooltip w-32 bg-white p-2 shadow-lg rounded">
+                  <p className="text-sm text-gray-600">{`Sales: E£${payload[0]?.value?.toLocaleString()}`}</p>
                 </div>
               );
             }

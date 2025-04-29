@@ -11,6 +11,12 @@ import EventTypes from './EventTypes';
 import Reviews from './Reviews';
 import Surveys from './Surveys';
 import Spinner from './Spinner';
+import CircularProgress from './CircularProgress';
+import ConcentricCircles from './ConcentricCircles';
+import RadarChartComponent from './RadarChart';
+import StackedAreaChart from './StackedAreaChart';
+import WebMetrics from './WebMetrics';
+import RevenueTreemap from './RevenueTreemap';
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'] });
 const data = [
   {
@@ -58,12 +64,13 @@ const Dashboard: NextPage = () => {
           href="/ArteraIcon.ico"
         />
       </Head>
-      <main>
-        <div>
-          <h1 className={`${plusJakarta.className} title`}>Dashboard</h1>
-          <div className="container mx-auto grid gap-6">
+      <main className="px-4 py-6 min-h-screen">
+        <div className="max-w-[1920px] mx-auto">
+          <h1 className={`${plusJakarta.className} text-2xl font-semibold mb-8`}>Dashboard</h1>
+          <div className="grid gap-8">
+            {/* KPI Section */}
             <Suspense fallback={<Spinner />}>
-              <div className="card grid grid-cols-1 place-items-center py-3 px-3 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 ">
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
                 <KPI
                   borderColor="5E5498"
                   backgroundColor="F4F2FF"
@@ -130,59 +137,97 @@ const Dashboard: NextPage = () => {
                 />
               </div>
             </Suspense>
-            <div className="grid h-full grid-rows-3 sm:grid-rows-2 lg:grid-rows-1">
-              <div className="grid h-[250px] grid-cols-8 gap-6">
-                <div className="card col-span-full h-[250px] pt-1 sm:col-span-4 lg:col-span-2">
-                  <Suspense fallback={<Spinner />}>
-                    <Sales />
-                  </Suspense>
-                </div>
-                <div className="card order-1 col-span-full h-[250px] lg:-order-none lg:col-span-4">
-                  <Suspense fallback={<Spinner />}>
-                    <EventsROI />
-                  </Suspense>
-                </div>
-                <div className="card col-span-full h-[250px] sm:col-span-4 lg:col-span-2">
-                  <Suspense fallback={<Spinner />}>
-                    <EventTypes />
-                  </Suspense>
-                </div>
+
+            {/* Key Metrics Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="card h-[140px]">
+                <Suspense fallback={<Spinner />}>
+                  <SimpleLine
+                    title={'Visitors Count'}
+                    value={12468}
+                    percentage={21.01}
+                    style={'increasing'}
+                    data={data}
+                  />
+                </Suspense>
+              </div>
+              <div className="card h-[140px]">
+                <Suspense fallback={<Spinner />}>
+                  <SimpleLine
+                    title={'Reservations'}
+                    value={127}
+                    percentage={10.91}
+                    style={'decrasing'}
+                    data={data}
+                  />
+                </Suspense>
+              </div>
+              <div className="card h-[140px]">
+                <Suspense fallback={<Spinner />}>
+                  <Surveys />
+                </Suspense>
+              </div>
+              <div className="card h-[140px]">
+                <Suspense fallback={<Spinner />}>
+                  <Reviews />
+                </Suspense>
               </div>
             </div>
-            <div className="grid h-full grid-rows-4 pb-5 pt-10 sm:grid-rows-2 lg:grid-rows-1 lg:pt-0">
-              <div className="grid h-[130px] grid-cols-4 gap-6">
-                <div className="card col-span-full h-[130px] sm:col-span-2 lg:col-span-1">
-                  <Suspense fallback={<Spinner />}>
-                    <SimpleLine
-                      title={'Visitors Count'}
-                      value={12468}
-                      percentage={21.01}
-                      style={'increasing'}
-                      data={data}
-                    />
-                  </Suspense>
-                </div>
-                <div className="card col-span-full h-[130px] sm:col-span-2 lg:col-span-1">
-                  <Suspense fallback={<Spinner />}>
-                    <SimpleLine
-                      title={'Reservations'}
-                      value={127}
-                      percentage={10.91}
-                      style={'decrasing'}
-                      data={data}
-                    />
-                  </Suspense>
-                </div>
-                <div className="card col-span-full h-[130px] sm:col-span-2 lg:col-span-1">
-                  <Suspense fallback={<Spinner />}>
-                    <Surveys />
-                  </Suspense>
-                </div>
-                <div className="card col-span-full h-[130px] sm:col-span-2 lg:col-span-1">
-                  <Suspense fallback={<Spinner />}>
-                    <Reviews />
-                  </Suspense>
-                </div>
+
+            {/* Event Analytics Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="card h-[300px]">
+                <Suspense fallback={<Spinner />}>
+                  <ConcentricCircles />
+                </Suspense>
+              </div>
+              <div className="card h-[300px]">
+                <Suspense fallback={<Spinner />}>
+                  <Sales />
+                </Suspense>
+              </div>
+              <div className="card h-[300px]">
+                <Suspense fallback={<Spinner />}>
+                  <EventsROI />
+                </Suspense>
+              </div>
+              <div className="card h-[300px]">
+                <Suspense fallback={<Spinner />}>
+                  <EventTypes />
+                </Suspense>
+              </div>
+            </div>
+
+            {/* Performance Metrics Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="card h-[320px]">
+                <Suspense fallback={<Spinner />}>
+                  <StackedAreaChart />
+                </Suspense>
+              </div>
+              <div className="card h-[320px]">
+                <Suspense fallback={<Spinner />}>
+                  <CircularProgress />
+                </Suspense>
+              </div>
+              <div className="card h-[320px]">
+                <Suspense fallback={<Spinner />}>
+                  <RadarChartComponent />
+                </Suspense>
+              </div>
+            </div>
+
+            {/* Detailed Analytics Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="card h-[500px]">
+                <Suspense fallback={<Spinner />}>
+                  <WebMetrics />
+                </Suspense>
+              </div>
+              <div className="card h-[500px]">
+                <Suspense fallback={<Spinner />}>
+                  <RevenueTreemap />
+                </Suspense>
               </div>
             </div>
           </div>

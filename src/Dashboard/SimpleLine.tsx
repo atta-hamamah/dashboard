@@ -1,4 +1,5 @@
-import { LineChart, Line, ResponsiveContainer } from "recharts";
+import { LineChart, Line, ResponsiveContainer, Tooltip } from "recharts";
+import { TooltipProps } from "recharts";
 
 type lineProps = {
   title: string;
@@ -7,12 +8,30 @@ type lineProps = {
   data: { value: number }[];
   style: string;
 };
+
+type CustomTooltipProps = TooltipProps<number, string> & {
+  active?: boolean;
+  payload?: Array<{
+    value: number;
+  }>;
+};
+
+const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip bg-white p-2 shadow-lg rounded">
+        <p className="text-sm text-gray-600">
+          {`Value: ${payload[0].value.toLocaleString()}`}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const SimpleLine = ({ title, value, percentage, style, data }: lineProps) => {
   const fillColor = style === "increasing" ? "#04CE00" : "#FF718B";
-  const formatter = new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    compactDisplay: "short",
-  });
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
@@ -28,8 +47,9 @@ const SimpleLine = ({ title, value, percentage, style, data }: lineProps) => {
           {value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         </text>
         <text x="4%" y="100" fontSize="15" fill={fillColor} fontWeight={"bold"}>
-          {style === "increasing" ? "+" : "-"}21.01%
+          {style === "increasing" ? "+" : "-"}{percentage}%
         </text>
+        <Tooltip content={<CustomTooltip />} />
         <Line
           type="linear"
           dataKey={"value"}

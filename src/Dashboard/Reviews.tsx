@@ -1,12 +1,29 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   ResponsiveContainer,
+  Tooltip,
+  TooltipProps,
 } from "recharts";
+
 const data = [{ Negative: 50, Neutral: 80, Positive: 200 }];
+
+const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+  if (active && payload?.[0]) {
+    return (
+      <div className="custom-tooltip bg-white p-2 shadow-lg rounded">
+        <p className="text-sm text-gray-600">
+          {`${payload[0].dataKey}: ${payload[0].value?.toLocaleString() ?? 0}`}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const Reviews = () => {
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -20,6 +37,7 @@ const Reviews = () => {
         </text>
         <XAxis hide type="number" />
         <YAxis hide type="category" />
+        <Tooltip content={<CustomTooltip />} />
         <Bar
           dataKey="Negative"
           stackId="a"

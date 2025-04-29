@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { useMediaQuery } from "react-responsive";
 import { type CSSProperties } from 'react';
 
@@ -21,6 +21,9 @@ const EventTypes = () => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart>
+        <text x="5%" y="25" fontSize="24" fill="#9291A5">
+          Events by Type
+        </text>
         <Pie
           data={data}
           startAngle={180}
@@ -36,9 +39,20 @@ const EventTypes = () => {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <text x="5%" y="25" fontSize="24" fill="#9291A5">
-          Events by Type
-        </text>
+        <Tooltip
+          content={({ active, payload }) => {
+            if (active && payload?.length) {
+              return (
+                <div className="custom-tooltip bg-white p-2 shadow-lg rounded">
+                  <p className="text-sm text-gray-600">
+                    {`${payload[0]?.name}: ${payload[0]?.value}`}
+                  </p>
+                </div>
+              );
+            }
+            return null;
+          }}
+        />
         <Legend
           layout="horizontal"
           verticalAlign="bottom"

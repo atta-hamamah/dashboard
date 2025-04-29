@@ -7,44 +7,68 @@ import {
   ResponsiveContainer,
   LabelList,
   type LabelProps,
+  Tooltip,
+  TooltipProps,
 } from "recharts";
-type customLabelProps = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  src: string | undefined;
-};
-const CustomLabel = ({ x, y, width, height, src }: customLabelProps) => {
-  const imageWidth = width / 2;
-  const imageX = x - imageWidth / 2;
-  return (
-    <image
-      x={imageX}
-      y={y - height / 2 + 15}
-      width={width / 2}
-      height={height / 2}
-      href={`./${src}`}
-    />
-  );
-};
+
 type SurveyData = {
   name: string;
   value: number;
-  src: string;
+  icon: string;
 };
+
+interface CustomLabelProps extends LabelProps {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  value?: number;
+  index?: number;
+  payload?: SurveyData;
+}
+
 const data: SurveyData[] = [
-  { name: "A", value: 50, src: "phantom.jpg" },
-  { name: "B", value: 70, src: "Logo.png" },
-  { name: "C", value: 80, src: "Logo.png" },
-  { name: "D", value: 120, src: "Logo.png" },
-  { name: "E", value: 70, src: "Logo.png" },
+  { name: "Movie Night", value: 50, icon: "🎬" },
+  { name: "Concert", value: 70, icon: "🎵" },
+  { name: "Art Show", value: 80, icon: "🎨" },
+  { name: "Theater", value: 120, icon: "🎭" },
+  { name: "Dance", value: 70, icon: "💃" },
 ];
 
+const CustomLabel = ({ x, y, width, height, payload }: CustomLabelProps) => {
+  if (!x || !y || !width || !height || !payload) return null;
+
+  return (
+    <text
+      x={x + width / 2}
+      y={y - height / 2 + 15}
+      textAnchor="middle"
+      dominantBaseline="middle"
+      fontSize="20"
+    >
+      {payload.icon}
+    </text>
+  );
+};
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+    return (
+      <div className="custom-tooltip bg-white p-2 shadow-lg rounded">
+        <p className="text-sm font-bold text-gray-600">{label}</p>
+        <p className="text-sm text-gray-600">
+          {`Responses: ${data.value}`}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const Surveys = () => {
   return (
-    <ResponsiveContainer width="100%">
+    <ResponsiveContainer width="100%" height="100%">
       <BarChart
         width={600}
         height={300}
@@ -59,20 +83,12 @@ const Surveys = () => {
           dataKey="name"
           tickLine={false}
           axisLine={false}
-          tick={(props: { x: number, y: number, index: number, width: number, height: number }) => {
-            return (
-              <CustomLabel
-                key={props.index}
-                x={props.x}
-                y={props.y}
-                width={props.width}
-                height={props.height}
-                src={data[props.index]?.src}
-              />
-            )
-          }}
+          tick={(props) => (
+            <CustomLabel {...props} />
+          )}
         />
         <YAxis tickLine={false} axisLine={false} />
+        <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="value" fill="#C6D2FD" barSize={5}>
           <LabelList
             dataKey="value"
